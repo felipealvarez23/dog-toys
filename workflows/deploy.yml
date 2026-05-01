@@ -1,0 +1,34 @@
+name: Deploy to S3 (OIDC)
+
+on:
+  push:
+    branches:
+      - trunk
+
+permissions:
+  id-token: write   # 🔥 necesario para OIDC
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-east-2
+
+      - name: Debug identity (opcional pero útil)
+        run: aws sts get-caller-identity
+
+      - name: Deploy to S3
+        run: |
+          aws s3 sync . s3://dog-toys-site --delete \
+            --exclude ".git/*" \
+            --exclude ".github/*" \
+            --exclude "README.md"
