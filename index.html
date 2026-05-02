@@ -1,12 +1,809 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dog toys</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GuauToys | Juguetes para perros</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #fff7ed;
+            color: #1e293b;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        .container {
+            width: min(1120px, 92%);
+            margin: 0 auto;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.95);
+            border-bottom: 1px solid #fed7aa;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav {
+            height: 76px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 46px;
+            height: 46px;
+            display: grid;
+            place-items: center;
+            border-radius: 16px;
+            background: #f97316;
+            color: white;
+            font-size: 24px;
+            box-shadow: 0 10px 25px rgba(249, 115, 22, 0.25);
+        }
+
+        .logo h2 {
+            font-size: 22px;
+            line-height: 1;
+        }
+
+        .logo p {
+            margin-top: 4px;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .menu {
+            display: flex;
+            gap: 32px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #475569;
+        }
+
+        .menu a:hover {
+            color: #f97316;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 22px;
+            border: none;
+            border-radius: 16px;
+            background: #f97316;
+            color: white;
+            font-weight: 800;
+            cursor: pointer;
+            transition: 0.25s ease;
+        }
+
+        .btn:hover {
+            background: #ea580c;
+            transform: translateY(-2px);
+        }
+
+        .btn-dark {
+            background: #0f172a;
+        }
+
+        .btn-dark:hover {
+            background: #1e293b;
+        }
+
+        .btn-outline {
+            background: white;
+            color: #0f172a;
+            border: 1px solid #cbd5e1;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 76px 0;
+        }
+
+        .hero::before,
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.45;
+            z-index: -1;
+        }
+
+        .hero::before {
+            right: -80px;
+            top: -100px;
+            background: #fdba74;
+        }
+
+        .hero::after {
+            left: -80px;
+            bottom: -100px;
+            background: #fde68a;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 56px;
+        }
+
+        .badge {
+            display: inline-block;
+            margin-bottom: 22px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            background: white;
+            color: #c2410c;
+            font-size: 14px;
+            font-weight: 800;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+        }
+
+        .hero h1 {
+            font-size: clamp(42px, 6vw, 72px);
+            line-height: 0.95;
+            letter-spacing: -2px;
+            color: #0f172a;
+        }
+
+        .hero p {
+            margin-top: 24px;
+            max-width: 560px;
+            font-size: 18px;
+            line-height: 1.8;
+            color: #64748b;
+        }
+
+        .hero-actions {
+            margin-top: 32px;
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .hero-image {
+            position: relative;
+            padding: 16px;
+            border-radius: 34px;
+            background: white;
+            box-shadow: 0 28px 70px rgba(15, 23, 42, 0.18);
+        }
+
+        .hero-image img {
+            width: 100%;
+            height: 430px;
+            object-fit: cover;
+            border-radius: 26px;
+        }
+
+        .rating-card {
+            position: absolute;
+            left: 32px;
+            bottom: -24px;
+            padding: 18px 22px;
+            border-radius: 22px;
+            background: white;
+            box-shadow: 0 18px 38px rgba(15, 23, 42, 0.18);
+        }
+
+        .rating-card span {
+            color: #f59e0b;
+            font-size: 18px;
+        }
+
+        .benefits {
+            padding: 34px 0;
+        }
+
+        .benefit-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .benefit-card {
+            display: flex;
+            gap: 16px;
+            padding: 24px;
+            border-radius: 26px;
+            background: white;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+        }
+
+        .benefit-icon {
+            width: 52px;
+            height: 52px;
+            flex-shrink: 0;
+            display: grid;
+            place-items: center;
+            border-radius: 18px;
+            background: #ffedd5;
+            color: #ea580c;
+            font-size: 24px;
+        }
+
+        .benefit-card h3 {
+            margin-bottom: 8px;
+            font-size: 18px;
+        }
+
+        .benefit-card p {
+            color: #64748b;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .products {
+            padding: 70px 0;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            gap: 24px;
+            margin-bottom: 34px;
+        }
+
+        .eyebrow {
+            margin-bottom: 10px;
+            color: #ea580c;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 13px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(34px, 5vw, 52px);
+            color: #0f172a;
+            letter-spacing: -1.5px;
+        }
+
+        .section-header p {
+            margin-top: 14px;
+            color: #64748b;
+            max-width: 620px;
+            line-height: 1.7;
+        }
+
+        .search-box input {
+            width: 300px;
+            padding: 15px 18px;
+            border: 1px solid #fed7aa;
+            border-radius: 16px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search-box input:focus {
+            border-color: #fb923c;
+            box-shadow: 0 0 0 4px #fed7aa;
+        }
+
+        .categories {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            margin-bottom: 34px;
+        }
+
+        .category {
+            padding: 12px 18px;
+            border-radius: 16px;
+            background: white;
+            color: #475569;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .category.active {
+            background: #0f172a;
+            color: white;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        .product-card {
+            overflow: hidden;
+            border-radius: 30px;
+            background: white;
+            box-shadow: 0 10px 26px rgba(15, 23, 42, 0.07);
+            transition: 0.25s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 24px 55px rgba(15, 23, 42, 0.14);
+        }
+
+        .product-image {
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.4s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.08);
+        }
+
+        .tag {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: white;
+            color: #ea580c;
+            font-size: 12px;
+            font-weight: 900;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, 0.15);
+        }
+
+        .product-info {
+            padding: 22px;
+        }
+
+        .product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        .pill {
+            padding: 7px 11px;
+            border-radius: 999px;
+            background: #ffedd5;
+            color: #c2410c;
+        }
+
+        .stars {
+            color: #f59e0b;
+        }
+
+        .product-info h3 {
+            min-height: 58px;
+            font-size: 21px;
+            color: #0f172a;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .price {
+            font-size: 24px;
+            font-weight: 900;
+            color: #0f172a;
+        }
+
+        .small-btn {
+            padding: 12px 15px;
+            border-radius: 14px;
+            font-size: 14px;
+        }
+
+        .kit {
+            padding-bottom: 76px;
+        }
+
+        .kit-box {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 36px;
+            align-items: center;
+            padding: 46px;
+            border-radius: 34px;
+            background: #0f172a;
+            color: white;
+            box-shadow: 0 28px 70px rgba(15, 23, 42, 0.2);
+        }
+
+        .kit-icon {
+            width: 58px;
+            height: 58px;
+            display: grid;
+            place-items: center;
+            margin-bottom: 20px;
+            border-radius: 18px;
+            background: #f97316;
+            font-size: 26px;
+        }
+
+        .kit h2 {
+            font-size: clamp(32px, 4vw, 46px);
+            letter-spacing: -1px;
+        }
+
+        .kit p {
+            margin-top: 16px;
+            color: #cbd5e1;
+            line-height: 1.8;
+        }
+
+        .kit-card {
+            padding: 28px;
+            border-radius: 26px;
+            background: white;
+            color: #0f172a;
+        }
+
+        .kit-card p {
+            color: #64748b;
+        }
+
+        .kit-card .price {
+            margin-top: 18px;
+            font-size: 34px;
+        }
+
+        .kit-card .btn {
+            margin-top: 18px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .footer {
+            padding: 34px 0;
+            background: white;
+            border-top: 1px solid #fed7aa;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        @media (max-width: 900px) {
+            .menu {
+                display: none;
+            }
+
+            .hero-grid,
+            .kit-box {
+                grid-template-columns: 1fr;
+            }
+
+            .benefit-grid,
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .section-header {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .search-box input {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 620px) {
+            .nav {
+                height: auto;
+                padding: 16px 0;
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .hero {
+                padding: 48px 0;
+            }
+
+            .hero-image img {
+                height: 320px;
+            }
+
+            .benefit-grid,
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .product-info h3 {
+                min-height: auto;
+            }
+
+            .product-footer,
+            .footer-content {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>🚀 Mi sitio desplegado con OIDC</h1>
-    <p>Deploy actualizado correctamente</p>
+<header class="header">
+    <div class="container nav">
+        <a href="#" class="logo">
+            <div class="logo-icon">🐶</div>
+            <div>
+                <h2>GuauToys</h2>
+                <p>Juguetes felices para perros felices</p>
+            </div>
+        </a>
+
+        <nav class="menu">
+            <a href="#productos">Productos</a>
+            <a href="#beneficios">Beneficios</a>
+            <a href="#contacto">Contacto</a>
+        </nav>
+
+        <a href="#productos" class="btn btn-dark">🛒 Carrito</a>
+    </div>
+</header>
+
+<main>
+    <section class="hero">
+        <div class="container hero-grid">
+            <div>
+                <span class="badge">✨ Nuevos juguetes interactivos disponibles</span>
+                <h1>Diversión, energía y bienestar para tu perro.</h1>
+                <p>
+                    Encuentra juguetes resistentes, seguros y diseñados para mantener a tu perro activo,
+                    estimulado y feliz todos los días.
+                </p>
+                <div class="hero-actions">
+                    <a href="#productos" class="btn">Comprar ahora</a>
+                    <a href="#productos" class="btn btn-outline">Ver catálogo</a>
+                </div>
+            </div>
+
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1587300003388-59208cc962cb?auto=format&fit=crop&w=1200&q=80" alt="Perro feliz jugando con juguetes" />
+                <div class="rating-card">
+                    <p>Clientes felices</p>
+                    <strong><span>★★★★★</span> 4.8/5</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="beneficios" class="benefits">
+        <div class="container benefit-grid">
+            <article class="benefit-card">
+                <div class="benefit-icon">🚚</div>
+                <div>
+                    <h3>Envíos rápidos</h3>
+                    <p>Recibe tus juguetes en casa con entrega segura.</p>
+                </div>
+            </article>
+
+            <article class="benefit-card">
+                <div class="benefit-icon">🛡️</div>
+                <div>
+                    <h3>Materiales seguros</h3>
+                    <p>Productos pensados para morder, jugar y resistir.</p>
+                </div>
+            </article>
+
+            <article class="benefit-card">
+                <div class="benefit-icon">❤️</div>
+                <div>
+                    <h3>Más bienestar</h3>
+                    <p>Ayudan a reducir estrés, aburrimiento y ansiedad.</p>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <section id="productos" class="products">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <p class="eyebrow">Catálogo</p>
+                    <h2>Juguetes destacados</h2>
+                    <p>Filtra mentalmente por tipo de juego y encuentra el juguete ideal según la personalidad de tu perro.</p>
+                </div>
+                <div class="search-box">
+                    <input type="text" placeholder="Buscar juguete..." />
+                </div>
+            </div>
+
+            <div class="categories">
+                <span class="category active">Todos</span>
+                <span class="category">Morder</span>
+                <span class="category">Jalar</span>
+                <span class="category">Interactivos</span>
+                <span class="category">Dental</span>
+                <span class="category">Exterior</span>
+                <span class="category">Peluche</span>
+            </div>
+
+            <div class="product-grid">
+                <article class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1601758125946-6ec2ef64daf8?auto=format&fit=crop&w=900&q=80" alt="Pelota mordedora premium" />
+                        <span class="tag">Más vendido</span>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-meta">
+                            <span class="pill">Morder</span>
+                            <span class="stars">★ 4.8</span>
+                        </div>
+                        <h3>Pelota mordedora premium</h3>
+                        <div class="product-footer">
+                            <p class="price">$34.900</p>
+                            <button class="btn small-btn">Agregar</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1601758175576-648226072e90?auto=format&fit=crop&w=900&q=80" alt="Cuerda resistente doble nudo" />
+                        <span class="tag">Alta resistencia</span>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-meta">
+                            <span class="pill">Jalar</span>
+                            <span class="stars">★ 4.7</span>
+                        </div>
+                        <h3>Cuerda resistente doble nudo</h3>
+                        <div class="product-footer">
+                            <p class="price">$28.900</p>
+                            <button class="btn small-btn">Agregar</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1583511655826-05700442b31b?auto=format&fit=crop&w=900&q=80" alt="Dispensador interactivo snacks" />
+                        <span class="tag">Estimulación mental</span>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-meta">
+                            <span class="pill">Interactivos</span>
+                            <span class="stars">★ 4.9</span>
+                        </div>
+                        <h3>Dispensador interactivo snacks</h3>
+                        <div class="product-footer">
+                            <p class="price">$54.900</p>
+                            <button class="btn small-btn">Agregar</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?auto=format&fit=crop&w=900&q=80" alt="Hueso dental sabor pollo" />
+                        <span class="tag">Cuidado dental</span>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-meta">
+                            <span class="pill">Dental</span>
+                            <span class="stars">★ 4.6</span>
+                        </div>
+                        <h3>Hueso dental sabor pollo</h3>
+                        <div class="product-footer">
+                            <p class="price">$23.900</p>
+                            <button class="btn small-btn">Agregar</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=900&q=80" alt="Frisbee flexible para parque" />
+                        <span class="tag">Ideal para correr</span>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-meta">
+                            <span class="pill">Exterior</span>
+                            <span class="stars">★ 4.5</span>
+                        </div>
+                        <h3>Frisbee flexible para parque</h3>
+                        <div class="product-footer">
+                            <p class="price">$31.900</p>
+                            <button class="btn small-btn">Agregar</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="product-card">
+                    <div class="product-image">
+                        <img src="https://images.unsplash.com/photo-1568572933382-74d440642117?auto=format&fit=crop&w=900&q=80" alt="Peluche antiestrés con sonido" />
+                        <span class="tag">Suave y divertido</span>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-meta">
+                            <span class="pill">Peluche</span>
+                            <span class="stars">★ 4.7</span>
+                        </div>
+                        <h3>Peluche antiestrés con sonido</h3>
+                        <div class="product-footer">
+                            <p class="price">$39.900</p>
+                            <button class="btn small-btn">Agregar</button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="kit">
+        <div class="container">
+            <div class="kit-box">
+                <div>
+                    <div class="kit-icon">🦴</div>
+                    <h2>¿Tu perro se aburre en casa?</h2>
+                    <p>
+                        Arma un kit personalizado con juguetes de mordida, búsqueda y estimulación mental.
+                        Ideal para perros activos, cachorros y razas inteligentes.
+                    </p>
+                </div>
+
+                <div class="kit-card">
+                    <p class="eyebrow">Kit recomendado</p>
+                    <h3>Pack Energía Feliz</h3>
+                    <p>Incluye pelota mordedora, cuerda resistente y dispensador interactivo.</p>
+                    <p class="price">$99.900</p>
+                    <a href="#productos" class="btn">Comprar pack</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer id="contacto" class="footer">
+    <div class="container footer-content">
+        <p>© 2026 GuauToys. Todos los derechos reservados.</p>
+        <p>WhatsApp: +57 300 000 0000 · Tunja, Colombia</p>
+    </div>
+</footer>
 </body>
 </html>
