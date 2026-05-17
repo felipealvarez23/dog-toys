@@ -6,6 +6,7 @@ on:
       - trunk
     paths-ignore:
       - greeting/**
+      - .github/**
 
 permissions:
   id-token: write   # 🔥 necesario para OIDC
