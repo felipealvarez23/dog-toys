@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - trunk
+    paths-ignore:
+      - greeting/**
 
 permissions:
   id-token: write   # 🔥 necesario para OIDC
@@ -31,4 +33,5 @@ jobs:
           aws s3 sync . s3://dog-toys-site --delete \
             --exclude ".git/*" \
             --exclude ".github/*" \
+            --exclude "greeting/*" \
             --exclude "README.md"
