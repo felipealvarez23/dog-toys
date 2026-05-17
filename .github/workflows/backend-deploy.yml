@@ -31,6 +31,10 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Grant execute permission for Gradlew
+        run: chmod +x gradlew
+        working-directory: greeting
+
       - name: Build JAR with Gradle
         run: ./gradlew clean build -x test
         working-directory: greeting
