@@ -12,6 +12,13 @@ jobs:
       id-token: write
       contents: read
 
+    env:
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+      ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}
+      ECS_SERVICE: ${{ secrets.ECS_SERVICE }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -38,3 +45,14 @@ jobs:
       - name: Build JAR with Gradle
         run: ./gradlew clean build -x test
         working-directory: greeting
+
+      - name: Log in to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image
+        run: |
+          IMAGE_TAG=latest
+          docker build -t greeting-app:$IMAGE_TAG .
+          docker tag greeting-app:$IMAGE_TAG \
+            ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
+          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
