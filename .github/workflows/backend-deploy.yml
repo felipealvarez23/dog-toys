@@ -58,3 +58,14 @@ jobs:
             ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
           docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
         working-directory: greeting
+
+      - name: Prepare task definition
+        run: |
+          DATE=$(date +'%Y%m%d')
+          IMAGE_TAG=dog-service-${DATE}.${GITHUB_RUN_NUMBER}
+          sed "s|<IMAGE>|${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG|g" task-definition.json > task-def.json
+        working-directory: greeting
+
+      - name: Register task definition
+        run: |
+          aws ecs register-task-definition --cli-input-json file://task-def.json
