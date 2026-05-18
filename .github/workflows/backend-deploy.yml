@@ -27,7 +27,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_BACKEND_ROLE_ARN }}
-          aws-region: us-east-2
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Debug identity (opcional pero útil)
         run: aws sts get-caller-identity
