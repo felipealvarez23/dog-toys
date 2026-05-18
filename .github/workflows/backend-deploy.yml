@@ -51,7 +51,8 @@ jobs:
 
       - name: Build, tag, and push image
         run: |
-          IMAGE_TAG=latest
+          DATE=$(date +'%Y%m%d')
+          IMAGE_TAG=dog-service-${DATE}.${GITHUB_RUN_NUMBER}
           docker build -t greeting-app:$IMAGE_TAG .
           docker tag greeting-app:$IMAGE_TAG \
             ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
