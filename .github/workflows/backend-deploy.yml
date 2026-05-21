@@ -63,7 +63,9 @@ jobs:
         run: |
           DATE=$(date +'%Y%m%d')
           IMAGE_TAG=dog-service-${DATE}.${GITHUB_RUN_NUMBER}
-          sed "s|<IMAGE>|${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG|g" task-definition.json > task-def.json
+          sed -e "s|<IMAGE>|${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${IMAGE_TAG}|g" \
+              -e "s|<EXECUTION_ROLE_ARN>|${{ secrets.AWS_BACKEND_ROLE_ARN }}|g" \
+              greeting/task-definition.json > task-def.json
         working-directory: greeting
 
       - name: Register task definition
