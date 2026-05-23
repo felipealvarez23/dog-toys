@@ -6,3 +6,8 @@ spring:
     url: r2dbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+
+logging:
+  level:
+    org.springframework: INFO
+    io.r2dbc.postgresql: DEBUG

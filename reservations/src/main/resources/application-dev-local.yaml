@@ -3,6 +3,11 @@ spring:
     name: reservations
 
   r2dbc:
-    url: r2dbc:postgresql://localhost:5432/reservation_db?schema=scres
-    username: admin
-    password: admin123
+    url:
+    username:
+    password:
+
+logging:
+  level:
+    org.springframework: INFO
+    io.r2dbc.postgresql: DEBUG
