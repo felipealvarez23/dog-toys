@@ -3,7 +3,7 @@ spring:
     name: reservations
 
   r2dbc:
-    url: r2dbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?currentSchema=${DB_SCHEMA}
+    url: r2dbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?currentSchema=${DB_SCHEMA}&ssl=true
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 
