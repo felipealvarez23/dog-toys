@@ -1,7 +1,6 @@
 {
   "family": "reservation-task",
   "executionRoleArn": "<EXECUTION_ROLE_ARN>",
-  "taskRoleArn":"arn:aws:iam::443414059882:role/ecsTaskRole-reservation",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "256",
@@ -38,11 +37,11 @@
       "secrets": [
         {
           "name": "DB_USERNAME",
-          "valueFrom": "arn:aws:secretsmanager:us-east-1:443414059882:secret:rds!cluster-4f6acfe2-d305-4ad5-9dc3-3b64aaaec0d0-xyJNF7"
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:443414059882:secret:rds!cluster-4f6acfe2-d305-4ad5-9dc3-3b64aaace0d0-xyJNF7"
         },
         {
           "name": "DB_PASSWORD",
-          "valueFrom": "arn:aws:secretsmanager:us-east-1:443414059882:secret:rds!cluster-4f6acfe2-d305-4ad5-9dc3-3b64aaaec0d0-xyJNF7"
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:443414059882:secret:rds!cluster-4f6acfe2-d305-4ad5-9dc3-3b64aaace0d0-xyJNF7"
         }
       ],
       "logConfiguration": {
