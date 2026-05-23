@@ -1,6 +1,7 @@
 {
   "family": "reservation-task",
   "executionRoleArn": "<EXECUTION_ROLE_ARN>",
+  "taskRoleArn":"arn:aws:iam::443414059882:role/ecsTaskRole-reservation",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "256",
