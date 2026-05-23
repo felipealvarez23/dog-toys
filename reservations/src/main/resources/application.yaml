@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: reservations
+
+  r2dbc:
+    url:
+    username:
+    password:
