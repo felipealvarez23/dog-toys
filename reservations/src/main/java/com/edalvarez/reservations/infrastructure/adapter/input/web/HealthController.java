@@ -10,6 +10,6 @@ import reactor.core.publisher.Mono;
 public class HealthController {
     @GetMapping
     public Mono<String> health(){
-        return Mono.just("Ok");
+        return Mono.just("Ok!");
     }
 }

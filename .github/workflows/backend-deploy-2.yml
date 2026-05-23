@@ -52,7 +52,7 @@ jobs:
       - name: Build, tag, and push image
         run: |
           DATE=$(date +'%Y%m%d')
-          IMAGE_TAG=dog-service-${DATE}.${GITHUB_RUN_NUMBER}
+          IMAGE_TAG=reservation-${DATE}.${GITHUB_RUN_NUMBER}
           docker build -t reservation-app:$IMAGE_TAG .
           docker tag reservation-app:$IMAGE_TAG \
             ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
