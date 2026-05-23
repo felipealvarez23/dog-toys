@@ -1,0 +1,77 @@
+name: Deploy Reservation App to AWS Fargate
+on:
+  push:
+    branches:
+      - trunk
+    paths:
+      - 'reservations/**'
+    paths-ignore:
+      - greeting/**
+      - .github/**
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    env:
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+      ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}
+      ECS_SERVICE: ${{ secrets.ECS_SERVICE }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_BACKEND_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Debug identity (opcional pero útil)
+        run: aws sts get-caller-identity
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for Gradlew
+        run: chmod +x gradlew
+        working-directory: reservations
+
+      - name: Build JAR with Gradle
+        run: ./gradlew clean build -x test
+        working-directory: reservations
+
+      - name: Log in to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image
+        run: |
+          DATE=$(date +'%Y%m%d')
+          IMAGE_TAG=dog-service-${DATE}.${GITHUB_RUN_NUMBER}
+          docker build -t reservation-app:$IMAGE_TAG .
+          docker tag reservation-app:$IMAGE_TAG \
+            ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
+          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
+        working-directory: reservations
+
+      - name: Prepare task definition
+        run: |
+          DATE=$(date +'%Y%m%d')
+          IMAGE_TAG=reservation-${DATE}.${GITHUB_RUN_NUMBER}
+          sed -e "s|<IMAGE>|${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${IMAGE_TAG}|g" \
+              -e "s|<EXECUTION_ROLE_ARN>|${{ secrets.AWS_ECS_TASK_ROLE_ARN }}|g" \
+              task-definition.json > task-def.json
+        working-directory: reservations
+
+      - name: Register task definition
+        run: |
+          aws ecs register-task-definition --cli-input-json file://task-def.json
+        working-directory: reservations

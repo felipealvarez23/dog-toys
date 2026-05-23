@@ -12,15 +12,18 @@ public class ReservationMapper {
                 .startDate(reservation.getStartDate())
                 .endDate(reservation.getEndDate())
                 .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
                 .status(reservation.getStatus())
                 .build();
     }
 
     public static Reservation toDomain(ReservationData reservation) {
         return Reservation.builder()
+                .id(reservation.getId())
                 .startDate(reservation.getStartDate())
                 .endDate(reservation.getEndDate())
-                .createdAt(LocalDateTime.now())
+                .createdAt(reservation.getCreatedAt())
+                .updatedAt(reservation.getUpdatedAt())
                 .status(reservation.getStatus())
                 .build();
     }

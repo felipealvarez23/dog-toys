@@ -13,7 +13,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ReservationUseCase {
 
-    private ReservationGateway reservationGateway;
+    private final ReservationGateway reservationGateway;
 
     public Mono<Reservation> createReservation(Reservation reservation) {
         return reservationGateway.createReservation(Reservation.builder()
