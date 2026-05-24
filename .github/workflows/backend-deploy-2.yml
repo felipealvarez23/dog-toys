@@ -47,15 +47,17 @@ jobs:
         run: |
           DATE=$(date +'%Y%m%d')
           IMAGE_TAG=reservation-${DATE}.${GITHUB_RUN_NUMBER}
-          ECR_REGISTRY="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com"
-          REPO_NAME="${{ vars.ECR_REPOSITORY }}"
-          FULL_IMAGE_URI="$ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG"
           
+          # Compilamos la imagen localmente
           docker build -t reservation-app:$IMAGE_TAG .
-          docker tag reservation-app:$IMAGE_TAG $FULL_IMAGE_URI
-            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_REPOSITORY }}:$IMAGE_TAG
-          docker push $FULL_IMAGE_URI
-          echo "image=$FULL_IMAGE_URI" >> $GITHUB_OUTPUT
+          
+          docker tag reservation-app:$IMAGE_TAG ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}/{{ vars.ECR_REPOSITORY }}:$IMAGE_TAG
+          
+          # Subimos a AWS ECR
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}/{{ vars.ECR_REPOSITORY }}:$IMAGE_TAG
+          
+          # Guardamos el output para que lo lea el envsubst en el paso de abajo
+          echo "image=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}/{{ vars.ECR_REPOSITORY }}:$IMAGE_TAG" >> $GITHUB_OUTPUT
         working-directory: reservations
 
       - name: Prepare task definition
