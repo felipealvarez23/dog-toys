@@ -44,6 +44,7 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build, tag, and push image
+        id: build-image
         run: |
           DATE=$(date +'%Y%m%d')
           IMAGE_TAG=reservation-${DATE}.${GITHUB_RUN_NUMBER}
