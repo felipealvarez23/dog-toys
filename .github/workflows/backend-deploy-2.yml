@@ -63,6 +63,7 @@ jobs:
       - name: Prepare task definition
         env:
           AWS_ECS_EXECUTION_ROLE_ARN: ${{ secrets.AWS_ECS_EXECUTION_ROLE_ARN }}
+          AWS_SECRETMAN_RDS_ARN: ${{ secrets.AWS_SECRETMAN_RDS_ARN }}
           AWS_SECRET_DB_USERNAME_ARN: ${{ secrets.AWS_SECRET_DB_USERNAME_ARN }}
           AWS_SECRET_DB_PASSWORD_ARN: ${{ secrets.AWS_SECRET_DB_PASSWORD_ARN }}
           AWS_ECS_TASK_CPU: ${{ vars.AWS_ECS_TASK_CPU }}
