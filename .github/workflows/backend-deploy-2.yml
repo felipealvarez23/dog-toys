@@ -69,10 +69,10 @@ jobs:
           AWS_SECRET_DB_PASSWORD_ARN: ${{ secrets.AWS_SECRET_DB_PASSWORD_ARN }}
           AWS_ECS_TASK_CPU: ${{ vars.AWS_ECS_TASK_CPU }}
           AWS_ECS_TASK_MEMORY: ${{ vars.AWS_ECS_TASK_MEMORY }}
-          RDS_DB_HOST: ${{ vars.AWS_RDS_DB_HOST }}
+          AWS_RDS_DB_HOST: ${{ vars.AWS_RDS_DB_HOST }}
           AWS_RDS_DB_PORT: ${{ vars.AWS_RDS_DB_PORT }}
-          RDS_DB_NAME: ${{ vars.AWS_RDS_DB_NAME }}
-          RDS_DB_SCHEMA: ${{ vars.AWS_RDS_DB_SCHEMA }}
+          AWS_RDS_DB_NAME: ${{ vars.AWS_RDS_DB_NAME }}
+          AWS_RDS_DB_SCHEMA: ${{ vars.AWS_RDS_DB_SCHEMA }}
           CONTAINER_NAME: 'reservation-app'
           AWS_ECR_IMAGE_URL: ${{ steps.build-image.outputs.image }} # Tomado del output de arriba 🪄
         run: |
