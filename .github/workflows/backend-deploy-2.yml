@@ -51,13 +51,13 @@ jobs:
           # Compilamos la imagen localmente
           docker build -t reservation-app:$IMAGE_TAG .
           
-          docker tag reservation-app:$IMAGE_TAG ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}/{{ vars.ECR_REPOSITORY }}:$IMAGE_TAG
+          docker tag reservation-app:$IMAGE_TAG ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}/${{ vars.ECR_REPOSITORY }}:$IMAGE_TAG
           
           # Subimos a AWS ECR
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}/{{ vars.ECR_REPOSITORY }}:$IMAGE_TAG
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}/${{ vars.ECR_REPOSITORY }}:$IMAGE_TAG
           
           # Guardamos el output para que lo lea el envsubst en el paso de abajo
-          echo "image=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}/{{ vars.ECR_REPOSITORY }}:$IMAGE_TAG" >> $GITHUB_OUTPUT
+          echo "image=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}/${{ vars.ECR_REPOSITORY }}:$IMAGE_TAG" >> $GITHUB_OUTPUT
         working-directory: reservations
 
       - name: Prepare task definition
