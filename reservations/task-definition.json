@@ -1,14 +1,14 @@
 {
   "family": "reservation-task",
-  "executionRoleArn": "<EXECUTION_ROLE_ARN>",
+  "executionRoleArn": "${AWS_ECS_EXECUTION_ROLE_ARN}",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["FARGATE"],
-  "cpu": "256",
-  "memory": "512",
+  "cpu": "${AWS_ECS_TASK_CPU}",
+  "memory": "${AWS_ECS_TASK_MEMORY}",
   "containerDefinitions": [
     {
-      "name": "reservation-app",
-      "image": "<IMAGE>",
+      "name": "${CONTAINER_NAME}",
+      "image": "${AWS_ECR_IMAGE_URL}",
       "essential": true,
       "portMappings": [
         {
@@ -23,29 +23,29 @@
         },
         {
           "name": "DB_HOST",
-          "value": "reservation-db.cluster-csbaqeso6ytp.us-east-1.rds.amazonaws.com"
+          "value": "${AWS_RDS_DB_HOST}"
         },
         {
           "name": "DB_PORT",
-          "value": "5432"
+          "value": "${AWS_RDS_DB_PORT}"
         },
         {
           "name": "DB_NAME",
-          "value": "reservation_db"
+          "value": "${AWS_RDS_DB_NAME}"
         },
         {
           "name": "DB_SCHEMA",
-          "value": "scres"
+          "value": "${AWS_RDS_DB_SCHEMA}"
         }
       ],
       "secrets": [
         {
           "name": "DB_USERNAME",
-          "valueFrom": "arn:aws:secretsmanager:us-east-1:443414059882:secret:rds!cluster-4f6acfe2-d305-4ad5-9dc3-3b64aaace0d0-xyJNF7:username::"
+          "valueFrom": "${AWS_SECRETMAN_RDS_ARN}:username::"
         },
         {
           "name": "DB_PASSWORD",
-          "valueFrom": "arn:aws:secretsmanager:us-east-1:443414059882:secret:rds!cluster-4f6acfe2-d305-4ad5-9dc3-3b64aaace0d0-xyJNF7:password::"
+          "valueFrom": "${AWS_SECRETMAN_RDS_ARN}:password::"
         }
       ],
       "logConfiguration": {

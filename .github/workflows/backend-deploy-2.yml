@@ -11,13 +11,7 @@ jobs:
     permissions:
       id-token: write
       contents: read
-
-    env:
-      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-      AWS_REGION: ${{ secrets.AWS_REGION }}
-      ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-      ECS_CLUSTER: ${{ secrets.ECS_CLUSTER }}
-      ECS_SERVICE: ${{ secrets.ECS_SERVICE }}
+    environment: dev
 
     steps:
       - name: Checkout code
@@ -26,8 +20,8 @@ jobs:
       - name: Configure AWS credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_BACKEND_ROLE_ARN }}
-          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ secrets.AWS_ROLE_GITHUB_OIDC_ARN }}
+          aws-region: ${{ vars.AWS_REGION }}
 
       - name: Debug identity (opcional pero útil)
         run: aws sts get-caller-identity
@@ -53,22 +47,38 @@ jobs:
         run: |
           DATE=$(date +'%Y%m%d')
           IMAGE_TAG=reservation-${DATE}.${GITHUB_RUN_NUMBER}
+          FULL_IMAGE_URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_REPOSITORY }}:$IMAGE_TAG"
+          
           docker build -t reservation-app:$IMAGE_TAG .
-          docker tag reservation-app:$IMAGE_TAG \
-            ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
-          docker push ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:$IMAGE_TAG
+          docker tag reservation-app:$IMAGE_TAG $FULL_IMAGE_URI
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_REPOSITORY }}:$IMAGE_TAG
+          docker push $FULL_IMAGE_URI
+          echo "image=$FULL_IMAGE_URI" >> $GITHUB_OUTPUT
         working-directory: reservations
 
       - name: Prepare task definition
+        env:
+          AWS_ECS_EXECUTION_ROLE_ARN: ${{ secrets.AWS_ECS_EXECUTION_ROLE_ARN }}
+          AWS_SECRET_DB_USERNAME_ARN: ${{ secrets.AWS_SECRET_DB_USERNAME_ARN }}
+          AWS_SECRET_DB_PASSWORD_ARN: ${{ secrets.AWS_SECRET_DB_PASSWORD_ARN }}
+          RDS_DB_HOST: ${{ vars.RDS_DB_HOST }}
+          RDS_DB_NAME: ${{ vars.RDS_DB_NAME }}
+          RDS_DB_SCHEMA: ${{ vars.RDS_DB_SCHEMA }}
+          CONTAINER_NAME: 'reservation-app'
+          AWS_ECR_IMAGE_URL: ${{ steps.build-image.outputs.image }} # Tomado del output de arriba 🪄
         run: |
-          DATE=$(date +'%Y%m%d')
-          IMAGE_TAG=reservation-${DATE}.${GITHUB_RUN_NUMBER}
-          sed -e "s|<IMAGE>|${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com/${{ env.ECR_REPOSITORY }}:${IMAGE_TAG}|g" \
-              -e "s|<EXECUTION_ROLE_ARN>|${{ secrets.AWS_ECS_TASK_ROLE_ARN }}|g" \
-              task-definition.json > task-def.json
+          # Sustitución limpia de variables en el archivo JSON
+          envsubst '$AWS_ECS_EXECUTION_ROLE_ARN,$AWS_SECRET_DB_USERNAME_ARN,$AWS_SECRET_DB_PASSWORD_ARN,$RDS_DB_HOST,$RDS_DB_NAME,$RDS_DB_SCHEMA,$CONTAINER_NAME,$AWS_ECR_IMAGE_URL' < task-definition.json > task-def.json
         working-directory: reservations
 
-      - name: Register task definition
-        run: |
-          aws ecs register-task-definition --cli-input-json file://task-def.json
-        working-directory: reservations
+      - name: Deploy to Amazon ECS Fargate
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          # Registra este archivo modificado en AWS ECS
+          task-definition: reservations/task-def.json
+          # El nombre de tu servicio de Fargate en AWS (Puedes usar una variable si cambia)
+          service: ${{ vars.ECS_SERVICE }}
+          # El nombre de tu clúster de ECS en AWS (Puedes usar una variable si cambia)
+          cluster: ${{ vars.ECS_CLUSTER }}
+          # GitHub esperará hasta que los contenedores viejos se apaguen y los nuevos estén estables
+          wait-for-service-stability: true
