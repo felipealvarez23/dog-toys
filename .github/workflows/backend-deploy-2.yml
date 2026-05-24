@@ -47,7 +47,9 @@ jobs:
         run: |
           DATE=$(date +'%Y%m%d')
           IMAGE_TAG=reservation-${DATE}.${GITHUB_RUN_NUMBER}
-          FULL_IMAGE_URI="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.ECR_REPOSITORY }}:$IMAGE_TAG"
+          ECR_REGISTRY="${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com"
+          REPO_NAME="${{ vars.ECR_REPOSITORY }}"
+          FULL_IMAGE_URI="$ECR_REGISTRY/$REPO_NAME:$IMAGE_TAG"
           
           docker build -t reservation-app:$IMAGE_TAG .
           docker tag reservation-app:$IMAGE_TAG $FULL_IMAGE_URI
