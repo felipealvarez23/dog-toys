@@ -65,14 +65,17 @@ jobs:
           AWS_ECS_EXECUTION_ROLE_ARN: ${{ secrets.AWS_ECS_EXECUTION_ROLE_ARN }}
           AWS_SECRET_DB_USERNAME_ARN: ${{ secrets.AWS_SECRET_DB_USERNAME_ARN }}
           AWS_SECRET_DB_PASSWORD_ARN: ${{ secrets.AWS_SECRET_DB_PASSWORD_ARN }}
+          AWS_ECS_TASK_CPU: ${{ vars.AWS_ECS_TASK_CPU }}
+          AWS_ECS_TASK_MEMORY: ${{ vars.AWS_ECS_TASK_MEMORY }}
           RDS_DB_HOST: ${{ vars.RDS_DB_HOST }}
+          AWS_RDS_DB_PORT: ${{ vars.AWS_RDS_DB_PORT }}
           RDS_DB_NAME: ${{ vars.RDS_DB_NAME }}
           RDS_DB_SCHEMA: ${{ vars.RDS_DB_SCHEMA }}
           CONTAINER_NAME: 'reservation-app'
           AWS_ECR_IMAGE_URL: ${{ steps.build-image.outputs.image }} # Tomado del output de arriba 🪄
         run: |
           # Sustitución limpia de variables en el archivo JSON
-          envsubst '$AWS_ECS_EXECUTION_ROLE_ARN,$AWS_SECRET_DB_USERNAME_ARN,$AWS_SECRET_DB_PASSWORD_ARN,$RDS_DB_HOST,$RDS_DB_NAME,$RDS_DB_SCHEMA,$CONTAINER_NAME,$AWS_ECR_IMAGE_URL' < task-definition.json > task-def.json
+          envsubst '$AWS_ECS_EXECUTION_ROLE_ARN,$AWS_SECRETMAN_RDS_ARN,$AWS_ECS_TASK_CPU,$AWS_ECS_TASK_MEMORY,$AWS_RDS_DB_HOST,$AWS_RDS_DB_PORT,$AWS_RDS_DB_NAME,$AWS_RDS_DB_SCHEMA,$CONTAINER_NAME,$AWS_ECR_IMAGE_URL' < task-definition.json > task-def.json
         working-directory: reservations
 
       - name: Deploy to Amazon ECS Fargate
